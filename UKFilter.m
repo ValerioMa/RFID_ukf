@@ -15,6 +15,17 @@ caso = 3;
 
 num_filters = 500;
 
+% input std
+std_v     = 0.1; % [m/s]
+std_omega = 0.1745; % [rad/s]
+
+% Initial position covariance 
+cov_x     = 1^2; % x,y position [m]
+cov_theta = (pi/180)^2; % theta position [rad]
+
+% Measure std
+std_measure = 0.01; % [m]
+
 % Sampling times
 dt = 0.1;               % simulation time step
 rfid_measure_dt = 0.1;  % measure frequency
@@ -31,18 +42,15 @@ output.rms_y = [];
 output.rms_th = [];
 
 for num_rfid = 1:4
-    clearvars -except caso plot_setting output num_rfid l rfid_measure_dt dt t_stop num_filters legenda
+    clearvars -except std_measure cov_x cov_theta std_v std_omega caso plot_setting output num_rfid l rfid_measure_dt dt t_stop num_filters legenda
     % Initial position and covariance of the robot
     initialPose = [10   -10  pi/4]';
-    cov_x     = 1^2;
-    cov_theta = (pi/180)^2;
+
     
     initialCov = diag([cov_x,cov_x,cov_theta]);
     
     % Odometry noise
     add_odom_noise = true;
-    std_v     = 0.01;
-    std_omega = 0.1745/5/2;
     
     % Plo params
     plot_dt  = 1/5;          % seconds between frame
@@ -55,7 +63,7 @@ for num_rfid = 1:4
     
     % Measure noise
     add_measure_noise = true;
-    R = (0.001)^2*eye(size(RFID,2),size(RFID,2)); % measure covariance
+    R = (std_measure)^2*eye(size(RFID,2),size(RFID,2)); % measure covariance
     
     %% Define the path
     fixed_v = 1;
