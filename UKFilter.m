@@ -11,8 +11,7 @@ addpath('/home/valerio/Programs/Matlab_utils/altmany-export_fig');
 % 1) movimento lungo asse y
 % 2) movimento lungo asse x
 % 3) movimento circolare
-caso = 3;
-
+caso = 2;
 num_filters = 500;
 
 % input std
@@ -44,25 +43,18 @@ output.rms_th = [];
 for num_rfid = 1:4
     clearvars -except std_measure cov_x cov_theta std_v std_omega caso plot_setting output num_rfid l rfid_measure_dt dt t_stop num_filters legenda
     % Initial position and covariance of the robot
-    initialPose = [10   -10  pi/4]';
-
-    
     initialCov = diag([cov_x,cov_x,cov_theta]);
     
     % Odometry noise
     add_odom_noise = true;
-    
-    % Plo params
-    plot_dt  = 1/5;          % seconds between frame
-    L = 0.4; % wheelbase
-    
-    
+    add_measure_noise = true;
+   
+    % RFID position 
     RFID = [0, 0,  l, -l
         l, -l, 0,  0]; % Position of RFID
     RFID = RFID(:,1:num_rfid);
     
-    % Measure noise
-    add_measure_noise = true;
+    % Measure noise    
     R = (std_measure)^2*eye(size(RFID,2),size(RFID,2)); % measure covariance
     
     %% Define the path
